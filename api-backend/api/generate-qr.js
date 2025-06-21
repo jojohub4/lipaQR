@@ -71,9 +71,23 @@ export default async function handler(req, res) {
             ? 'MMF'
             : 'SM',
       reference: isPayBill ? accountRef : '',
+      amount: "1", // Fixed amount of Ksh 1
+      size: "300", // QR code size in pixels
+      trxCode: isBuyGoods
+        ? 'BG'
+        : isPayBill
+          ? 'PB'
+          : isMMF
+            ? 'MMF'
+            : 'SM', // Must match merchantTransactionType
+      CPI: isBuyGoods
+        ? tillNumber
+        : isPayBill
+          ? paybillNumber
+          : sanitizedPhone // Merchant identifier
     };
 
-  
+
     console.log("📤 Sending QR payload to Safaricom:", payload);
 
     // Step 3: Send to QR API
