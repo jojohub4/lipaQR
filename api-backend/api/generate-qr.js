@@ -13,7 +13,6 @@ export default async function handler(req, res) {
 
   const consumerKey = process.env.SAFARICOM_KEY;
   const consumerSecret = process.env.SAFARICOM_SECRET;
-
   const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
 
   console.log("🔁 Incoming Request:", {
@@ -39,36 +38,43 @@ export default async function handler(req, res) {
     const accessToken = tokenRes.data.access_token;
     console.log("✅ Access token received");
 
-    let merchantCode = '';
-    if (transactionType === 'Buy Goods') merchantCode = tillNumber;
-    else if (transactionType === 'PayBill') merchantCode = paybillNumber;
-    else merchantCode = phoneNumber;
+    const sanitizedMerchantName = merchantName.trim();
+    const sanitizedPhone = phoneNumber.startsWith('+254')
+      ? phoneNumber
+      : phoneNumber.replace(/^0/, '+254');
+
+    const isPayBill = transactionType === 'PayBill';
+    const isBuyGoods = transactionType === 'Buy Goods';
+    const isMMF = transactionType === 'Send to Pochi';
+    const isSM = transactionType === 'Send Money';
+
+    const merchantCode = isBuyGoods
+      ? tillNumber
+      : isPayBill
+      ? paybillNumber
+      : sanitizedPhone;
 
     if (!merchantCode || !merchantName) {
       return res.status(400).json({ error: "Missing required fields (merchantName, merchantCode)" });
     }
 
     const payload = {
-      merchantName,
+      merchantName: sanitizedMerchantName,
+      amount: amount?.trim() === '' ? null : amount.trim(), // Optional
       merchantCode,
-      merchantTransactionType:
-        transactionType === 'Buy Goods'
-          ? 'BG'
-          : transactionType === 'PayBill'
-            ? 'PB'
-            : transactionType === 'Send to Pochi'
-              ? 'MMF'
-              : 'SM',
-      reference: transactionType === 'PayBill' ? accountRef : ''
+      merchantTransactionType: isBuyGoods
+        ? 'BG'
+        : isPayBill
+        ? 'PB'
+        : isMMF
+        ? 'MMF'
+        : 'SM',
+      reference: isPayBill ? accountRef : '',
     };
-
-    if (amount && amount.toString().trim() !== '') {
-      payload.amount = amount.toString().trim();
-    }
-
 
     console.log("📤 Sending QR payload to Safaricom:", payload);
 
+    // Step 3: Send to QR API
     const qrRes = await axios.post(
       'https://sandbox.safaricom.co.ke/mpesa/qrcode/v1/generate',
       payload,
@@ -90,4 +96,4 @@ export default async function handler(req, res) {
       details: error.response?.data || error.message,
     });
   }
-}
+};
