@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 
 export default async function handler(req, res) {
   const {
@@ -14,7 +14,6 @@ export default async function handler(req, res) {
   const consumerKey = process.env.SAFARICOM_KEY;
   const consumerSecret = process.env.SAFARICOM_SECRET;
 
-  // Basic auth header
   const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
 
   console.log("🔁 Incoming Request:", {
@@ -28,7 +27,6 @@ export default async function handler(req, res) {
   });
 
   try {
-    // Step 1: Get OAuth Token
     const tokenRes = await axios.get(
       'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
       {
@@ -37,10 +35,10 @@ export default async function handler(req, res) {
         },
       }
     );
+
     const accessToken = tokenRes.data.access_token;
     console.log("✅ Access token received");
 
-    // Step 2: Determine merchantCode based on transaction type
     let merchantCode = '';
     if (transactionType === 'Buy Goods') merchantCode = tillNumber;
     else if (transactionType === 'PayBill') merchantCode = paybillNumber;
