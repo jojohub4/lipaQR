@@ -51,8 +51,8 @@ export default async function handler(req, res) {
     const merchantCode = isBuyGoods
       ? tillNumber
       : isPayBill
-      ? paybillNumber
-      : sanitizedPhone;
+        ? paybillNumber
+        : sanitizedPhone;
 
     if (!merchantCode || !merchantName) {
       return res.status(400).json({ error: "Missing required fields (merchantName, merchantCode)" });
@@ -60,17 +60,26 @@ export default async function handler(req, res) {
 
     const payload = {
       merchantName: sanitizedMerchantName,
-      amount: typeof amount === 'string' && amount.trim() !== '' ? amount.trim() : null,
-      merchantCode,
+      merchantCode: isBuyGoods
+        ? tillNumber
+        : isPayBill
+          ? paybillNumber
+          : sanitizedPhone,
       merchantTransactionType: isBuyGoods
         ? 'BG'
         : isPayBill
-        ? 'PB'
-        : isMMF
-        ? 'MMF'
-        : 'SM',
+          ? 'PB'
+          : isMMF
+            ? 'MMF'
+            : 'SM',
       reference: isPayBill ? accountRef : '',
     };
+
+    // ✅ Only include amount if valid number string
+    if (typeof amount === 'string' && amount.trim() !== '') {
+      payload.amount = amount.trim();
+    }
+
 
     console.log("📤 Sending QR payload to Safaricom:", payload);
 
