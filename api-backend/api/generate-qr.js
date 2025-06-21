@@ -50,7 +50,7 @@ export default async function handler(req, res) {
 
     const payload = {
       merchantName,
-      amount: amount && amount.trim() !== '' ? parseFloat(amount) : null,
+      amount: amount && amount.trim() !== '' ? amount.trim() : null,
       merchantCode,
       merchantTransactionType:
         transactionType === 'Buy Goods'
