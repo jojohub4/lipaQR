@@ -60,7 +60,7 @@ export default async function handler(req, res) {
 
     const payload = {
       merchantName: sanitizedMerchantName,
-      amount: amount?.trim() === '' ? null : amount.trim(), // Optional
+      amount: typeof amount === 'string' && amount.trim() !== '' ? amount.trim() : null,
       merchantCode,
       merchantTransactionType: isBuyGoods
         ? 'BG'
