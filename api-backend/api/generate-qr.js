@@ -50,18 +50,22 @@ export default async function handler(req, res) {
 
     const payload = {
       merchantName,
-      amount: amount && amount.trim() !== '' ? amount.trim() : null,
       merchantCode,
       merchantTransactionType:
         transactionType === 'Buy Goods'
           ? 'BG'
           : transactionType === 'PayBill'
-          ? 'PB'
-          : transactionType === 'Send to Pochi'
-          ? 'MMF'
-          : 'SM',
-      reference: transactionType === 'PayBill' ? accountRef : '',
+            ? 'PB'
+            : transactionType === 'Send to Pochi'
+              ? 'MMF'
+              : 'SM',
+      reference: transactionType === 'PayBill' ? accountRef : ''
     };
+
+    if (amount && amount.toString().trim() !== '') {
+      payload.amount = amount.toString().trim();
+    }
+
 
     console.log("📤 Sending QR payload to Safaricom:", payload);
 
