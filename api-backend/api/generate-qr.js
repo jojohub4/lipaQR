@@ -3,7 +3,6 @@ import axios from 'axios/dist/node/axios.cjs';
 export default async function handler(req, res) {
   const {
     transactionType,
-    amount,
     merchantName,
     tillNumber,
     paybillNumber,
@@ -18,7 +17,6 @@ export default async function handler(req, res) {
   console.log("🔁 Incoming Request:", {
     transactionType,
     merchantName,
-    amount,
     tillNumber,
     paybillNumber,
     accountRef,
@@ -75,12 +73,7 @@ export default async function handler(req, res) {
       reference: isPayBill ? accountRef : '',
     };
 
-    // ✅ Only include amount if valid number string
-    if (typeof amount === 'string' && amount.trim() !== '') {
-      payload.amount = amount.trim();
-    }
-
-
+  
     console.log("📤 Sending QR payload to Safaricom:", payload);
 
     // Step 3: Send to QR API
