@@ -7,8 +7,10 @@ export default async function handler(req, res) {
     tillNumber,
     paybillNumber,
     accountRef,
-    phoneNumber,
-  } = req.body;
+    phoneNumber,amount
+} = req.body;
+
+const finalAmount = amount?.toString().trim() || "10.00";
 
   const consumerKey = process.env.SAFARICOM_KEY;
   const consumerSecret = process.env.SAFARICOM_SECRET;
@@ -71,7 +73,7 @@ export default async function handler(req, res) {
             ? 'MMF'
             : 'SM',
       reference: isPayBill ? accountRef : '',
-      amount: amount.toString(), // Fixed amount 
+      amount: finalAmount, // Fixed amount 
       size: "300", // QR code size in pixels
       trxCode: isBuyGoods
         ? 'BG'
