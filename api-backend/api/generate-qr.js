@@ -90,6 +90,9 @@ export default async function handler(req, res) {
 
     console.log("📤 Sending QR payload to Safaricom:", payload);
 
+    console.log("Final Payload to Safaricom:", payload);
+
+
     // Step 3: Send to QR API
     const qrRes = await axios.post(
       'https://sandbox.safaricom.co.ke/mpesa/qrcode/v1/generate',
