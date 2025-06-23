@@ -71,7 +71,7 @@ export default async function handler(req, res) {
             ? 'MMF'
             : 'SM',
       reference: isPayBill ? accountRef : '',
-      amount: 10, // Fixed amount 
+      amount: amount.toString(), // Fixed amount 
       size: "300", // QR code size in pixels
       trxCode: isBuyGoods
         ? 'BG'
