@@ -59,35 +59,45 @@ export default async function handler(req, res) {
         }
 
         const payload = {
-            merchantName: sanitizedMerchantName,
-            merchantCode: isBuyGoods
+            "merchantName": sanitizedMerchantName,
+            "merchantCode": isBuyGoods
                 ? tillNumber
                 : isPayBill
                     ? paybillNumber
                     : sanitizedPhone,
-            merchantTransactionType: isBuyGoods
+            "merchantTransactionType": isBuyGoods
                 ? 'BG'
                 : isPayBill
                     ? 'PB'
                     : isMMF
                         ? 'MMF'
                         : 'SM',
-            reference: isPayBill ? accountRef : '',
-            amount: parseFloat(finalAmount), // ✅ convert to number
-            size: "300",
-            trxCode: isBuyGoods
+            "reference": isPayBill ? accountRef : '',
+            "amount": parseFloat(finalAmount), // ✅ convert to number
+            "size": "300",
+            "trxCode": isBuyGoods
                 ? 'BG'
                 : isPayBill
                     ? 'PB'
                     : isMMF
                         ? 'MMF'
                         : 'SM',
-            CPI: isBuyGoods
+            "CPI": isBuyGoods
                 ? tillNumber
                 : isPayBill
                     ? paybillNumber
                     : sanitizedPhone
         };
+        /**
+         * const payload = {
+   "MerchantName": sanitizedMerchantName,
+   "RefNo": "Invoice Test",
+   "Amount": 1,
+   "TrxCode": "BG",
+   "CPI": "0708920430",
+   "Size": "300"
+};
+         */
 
 
 
