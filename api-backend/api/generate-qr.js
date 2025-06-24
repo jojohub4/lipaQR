@@ -61,7 +61,7 @@ export default async function handler(req, res) {
         const payload = {
             MerchantName: sanitizedMerchantName, // 👈 Note capitalization
             RefNo: isPayBill ? accountRef : "INV" + Date.now(), // Required field
-            Amount: "10.00", // Must be string or number (both work)
+            Amount: 1, // Must be string or number (both work)
             TrxCode: isBuyGoods ? 'BG' : isPayBill ? 'PB' : isMMF ? 'MMF' : 'SM', // 👈 Note "TrxCode" (not trxCode)
             CPI: isBuyGoods ? tillNumber : isPayBill ? paybillNumber : sanitizedPhone, // 👈 "CPI" (not merchantCode)
             Size: "300" // Optional (default: 300)
