@@ -58,36 +58,14 @@ const finalAmount = amount?.toString().trim() || "10.00";
       return res.status(400).json({ error: "Missing required fields (merchantName, merchantCode)" });
     }
 
-    const payload = {
-      merchantName: sanitizedMerchantName,
-      merchantCode: isBuyGoods
-        ? tillNumber
-        : isPayBill
-          ? paybillNumber
-          : sanitizedPhone,
-      merchantTransactionType: isBuyGoods
-        ? 'BG'
-        : isPayBill
-          ? 'PB'
-          : isMMF
-            ? 'MMF'
-            : 'SM',
-      reference: isPayBill ? accountRef : '',
-      amount: finalAmount, // Fixed amount 
-      size: "300", // QR code size in pixels
-      trxCode: isBuyGoods
-        ? 'BG'
-        : isPayBill
-          ? 'PB'
-          : isMMF
-            ? 'MMF'
-            : 'SM', // Must match merchantTransactionType
-      CPI: isBuyGoods
-        ? tillNumber
-        : isPayBill
-          ? paybillNumber
-          : sanitizedPhone // Merchant identifier
-    };
+    const payload{
+   "MerchantName": "TEST Business",
+   "RefNo": "Invoice Test",
+   "Amount": 1,
+   "TrxCode": "BG",
+   "CPI": "0708920430",
+   "Size": "300"
+};
 
 
     console.log("📤 Sending QR payload to Safaricom:", payload);
