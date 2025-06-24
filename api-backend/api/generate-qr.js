@@ -59,35 +59,24 @@ export default async function handler(req, res) {
         }
 
         const payload = {
-            "merchantName": sanitizedMerchantName,
-            "merchantCode": isBuyGoods
+            MerchantName: sanitizedMerchantName,
+            RefNo: isPayBill ? accountRef : '',
+            Amount: finalAmount,  // Make sure it's a string or number, e.g. "10.00"
+            TrxCode: isBuyGoods
+                ? 'BG'
+                : isPayBill
+                    ? 'PB'
+                    : isMMF
+                        ? 'MMF'
+                        : 'SM',
+            CPI: isBuyGoods
                 ? tillNumber
                 : isPayBill
                     ? paybillNumber
                     : sanitizedPhone,
-            "merchantTransactionType": isBuyGoods
-                ? 'BG'
-                : isPayBill
-                    ? 'PB'
-                    : isMMF
-                        ? 'MMF'
-                        : 'SM',
-            "reference": isPayBill ? accountRef : '',
-            "amount": parseFloat(finalAmount), // ✅ convert to number
-            "size": "300",
-            "trxCode": isBuyGoods
-                ? 'BG'
-                : isPayBill
-                    ? 'PB'
-                    : isMMF
-                        ? 'MMF'
-                        : 'SM',
-            "CPI": isBuyGoods
-                ? tillNumber
-                : isPayBill
-                    ? paybillNumber
-                    : sanitizedPhone
+            Size: "300"
         };
+
         /**
          * const payload = {
    "MerchantName": sanitizedMerchantName,
