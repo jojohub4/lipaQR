@@ -58,7 +58,7 @@ const finalAmount = amount?.toString().trim() || "10.00";
       return res.status(400).json({ error: "Missing required fields (merchantName, merchantCode)" });
     }
 
-    const payload{
+    const payload = {
    "MerchantName": "TEST Business",
    "RefNo": "Invoice Test",
    "Amount": 1,
